@@ -7,29 +7,15 @@ import matplotlib.pyplot as plt
 
 class MyLassoSimDataset:
     """
-    This is a demo of implementation of LASSO Regression with L1-Regularization using
-    Cyclic Coordinate Descent and Random Coordinate Descent optimization algorithms.
-    
+     cd  for lasso
     """
     
     def __init__(self):
         """
-        This is a demo of implementation of LASSO Regression with L1-Regularization using
-        Cyclic Coordinate Descent and Random Coordinate Descent optimization algorithms.
-        
-        Dataset used is simulated using the fomula:
+        设置原始数据，最大迭代次数，lambda
         
         y = (-1) + (1 * X) + (2 * X**2) + (3 * X**3) + eps
-        
-        where X and eps are random numbers.
-        
-        No Parameters to be passed.
-        
-        The L1-Regularization parameter lambda is set to optimal value 0.01043 found by
-        cross validation.
-        
-        Maximum iterations is set to 1000.
-        
+
         """
         self.dataset = 'https://raw.githubusercontent.com/selva86/datasets/master/Hitters.csv'
         self.lambda_ = 0.01043
@@ -37,24 +23,7 @@ class MyLassoSimDataset:
         
     def computeobj(self, beta_v, X_train, y_train):
         """
-        Computes objective value for vector of beta values provided.
-        
-        Parameters
-        ----------
-        beta_v: numpy array
-        This is the array of all beta coefficient values.
-        
-        X_train: numpy array
-        This is the multidimensional array of all the features of training data.
-        
-        y_train: numpy array
-        This is the array of all labels of training data.
-        
-        Returns:
-        --------
-        objective: float
-        It returns the computed objective value including the regularization parameter.
-        
+        将β带入原方程求解
         """
         objective = 1/len(y_train) * np.linalg.norm(y_train-X_train.T.dot(beta_v))**2 +\
                     self.lambda_*np.linalg.norm(beta_v, ord = 1)
@@ -62,31 +31,12 @@ class MyLassoSimDataset:
     
     def compute_threshold(self, j, beta_v, X_train, y_train):
         """
-        Computes the Threshold Term for Coordinate Descent Algorithm.
-        
-        Parameters:
-        -----------
-        j: int
-        This is the pointer to the specific observation in the training dataset.
-        
-        beta_v: numpy array
-        This is the array of all beta coefficient values.
-        
-        X_train: numpy array
-        This is the multidimensional array of all the features of training data.
-        
-        y_train: numpy array
-        This is the array of all labels of training data.
-        
-        Returns:
-        --------
-        threshold: float
-        It returns the computed threshold value for Coordinate Descent Algorithm.
-        
+        计算所求点的threshold
+      
         """
         X_rem_j = np.delete(X_train,j,0)
         beta_rem_j = np.delete(beta_v,j,0)
-        R_j = y_train - X_rem_j.T.dot(beta_rem_j)
+        R_j = y_train - X_rem_j.T.dot(beta_rem_j)#残差项
         n = len(y_train)
         threshold = 2/n * X_train[j,:].dot(R_j)
         return threshold
